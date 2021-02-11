@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+</head>
+
+<body>
+  <div id="root"></div>
+</body>
+<script type="module">
+  import init, { html_2_vd } from './pkg/html2VD.js'
+  import vd from './index.js';
+  const filterHtml = (html) => {
+    return html.trim().replace(/[\n]+[\s]*/g, "")
+  }
+  const bindButton = () => {
+    let btn = document.createElement('button');
+    btn.onclick = () => {
+      let vdObj_new = html_2_vd(filterHtml(html_new));
+      vd.render(vdObj_new)
+    }
+    document.body.appendChild(btn)
+  }
+
+  const html = `
+      <div>
+          <h1>1title</h1>
+          <h2>subtitle</h2>
+      </div>
+      <h2>rom</h2>
+    `
+
+  const html_new = `
+    <div>
+      <h1>title</h1>
+      <h2>subtitle</h2>
+    </div>
+    <h2>romc</h2>
+  `
+
+  const run = async () => {
+    await init();
+    vd.renderHtml(html, {
+      bind: "#root"
+    })
+  }
+  run()
+  bindButton()
+</script>
+
+</html>

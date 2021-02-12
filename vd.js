@@ -25,6 +25,8 @@ const render = (vdObj) => {
 }
 
 const renderHtml = async (html, options = {bind: "#root"}) => {
+  prevVdObj = undefined;
+  rootElement = undefined;
   if (!isWasmInitial) {
     await init();
     isWasmInitial = true;
@@ -38,12 +40,11 @@ const renderHtml = async (html, options = {bind: "#root"}) => {
 }
 
 const renderHtml_cmj = (html, options = {bind: "#root"}) => {
-
+  prevVdObj = undefined;
+  rootElement = undefined;
   const _html = filterHtml(html)
   const vdObj = html2VD.html_2_vd(_html)
-
   rootElement = document.querySelector(options.bind)
-  
   console.log(rootElement)
   render(vdObj)
 }
@@ -104,8 +105,8 @@ const patchAttrs = (element, attrs) => {
       element.setAttribute(patches.key, patches.value)
     }
   })
-
 }
+
 
 export default {
   triggerRender,

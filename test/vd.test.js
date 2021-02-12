@@ -78,7 +78,7 @@ describe("single element", () => {
     expect(root.innerHTML).to.equal("<div><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li></div>")
     vd.render(html_2_vd(filterHtml(html_new)))
     expect(root.innerHTML).to.equal(`<div><li>2</li><li>3</li><li>3</li><li>4</li><li>6</li></div>`)
-    
+
   })
 })
 
@@ -86,6 +86,7 @@ describe("multiple element", () => {
   beforeEach(() => {
     env()
   })
+  
   it("test multiple element tag change", () => {
     const html = `
       <span>hello</span>

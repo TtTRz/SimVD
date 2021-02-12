@@ -1,4 +1,5 @@
 import init, { html_2_vd } from './pkg/html2VD.js'
+const html2VD = require('./pkg_node/html2VD.js')
 import { createElement } from './element.js'
 import { attrPatchTypes, nodePatchTypes } from './type.js';
 import {diffVd } from './diff.js';
@@ -13,17 +14,13 @@ let isWasmInitial = false;
 
 const render = (vdObj) => {
   if (prevVdObj) {
-    console.log(rootElement)
     const patches = diffVd(prevVdObj, vdObj)
     prevVdObj = vdObj;
-    console.log(patches)
     patch(rootElement, patches);
   } else {
     let root = createElement(vdObj).cloneNode(true);
     prevVdObj = vdObj;
     rootElement.appendChild(root)
-    // document.body.appendChild(root);
-    // rootElement = document.body.
   }
 }
 
@@ -40,26 +37,40 @@ const renderHtml = async (html, options = {bind: "#root"}) => {
   render(vdObj)
 }
 
+const renderHtml_cmj = (html, options = {bind: "#root"}) => {
+
+  const _html = filterHtml(html)
+  const vdObj = html2VD.html_2_vd(_html)
+
+  rootElement = document.querySelector(options.bind)
+  
+  console.log(rootElement)
+  render(vdObj)
+}
+
 
 const triggerRender = () => {
   render();
 }
 
-const patch = (domElement, patches, index = 0) => {
-  console.log(domElement)
-  console.log(patches)
+const patch = (parent, patches, index = -1) => {
+  let isRoot = false;
+
+  if (index === -1) {
+    isRoot = true;
+  }
+
+
   if (!patches) {
     return;
   }
 
   // create
   if (patches.type === nodePatchTypes.CREATE) {
-    return domElement.appendChild(createElement(patches.vd))
+    return parent.appendChild(createElement(patches.vd))
   }
 
-  const element = domElement.childNodes[index];
-  console.log(element)
-
+  let element = parent.childNodes[index];
   // remove
   if (patches.type === nodePatchTypes.REMOVE) {
     return parent.removeChild(element)
@@ -67,22 +78,25 @@ const patch = (domElement, patches, index = 0) => {
 
   // replace
   if (patches.type === nodePatchTypes.REPLACE) {
-    return domElement.replaceChild(createElement(patches.vd), element)
+    return parent.replaceChild(createElement(patches.vd), element)
   }
 
   // update
   if (patches.type === nodePatchTypes.UPDATE) {
     const {attrs, children} = patches
-    patchAttrs(domElement, attrs);
-    children.forEach((patches, i) => {
-      patch(element, patches, i)
+    !isRoot && patchAttrs(element, attrs);
+    children.forEach((patcher, i) => {
+      if (isRoot) {
+        patch(parent, patcher, i)
+      } else {
+        patch(element, patcher, i)
+      }
     })
   }
 }
 
 const patchAttrs = (element, attrs) => {
   if (!attrs) return
-
   attrs.forEach(patches => {
     if (patches.type === attrPatchTypes.REMOVE) {
       element.removeAttribute(patches.key)
@@ -96,5 +110,6 @@ const patchAttrs = (element, attrs) => {
 export default {
   triggerRender,
   render,
-  renderHtml
+  renderHtml,
+  renderHtml_cmj,
 }

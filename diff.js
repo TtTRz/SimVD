@@ -6,9 +6,13 @@ export const diffVd = (prevVd, nextVd) => {
 
   // fragmentNode
   // TODO
-  if (prevVd.node_type === NodeType.FragmentNode && nextVd.node_type === NodeType.FragmentNode) {
-    return diffChildren(prevVd, nextVd)[0];
-  }
+  // if (prevVd.node_type === NodeType.FragmentNode && nextVd.node_type === NodeType.FragmentNode) {
+  //   return {
+  //     type: nodePatchTypes.UPDATE,
+  //     attrs: [],
+  //     children: diffChildren(prevVd, nextVd)
+  //   }
+  // }
   
   // create
   if (prevVd === undefined) {
@@ -58,29 +62,36 @@ export const diffVd = (prevVd, nextVd) => {
 
 export const diffAttrs = (prevVd, nextVd) => {
   const patches = [];
+  const prevVdAttrs = {};
+  const nextVdAttrs = {};
+  prevVd.attrs.forEach((i) => {
+    prevVdAttrs[i.name] = i.value
+  })
 
-  const allAttrs = {...prevVd.attrs, ...nextVd.attrs}
-  
+  nextVd.attrs.forEach((i) => {
+    nextVdAttrs[i.name] = i.value
+  })
+
+  const allAttrs = {...prevVdAttrs, ...nextVdAttrs}
   Object.keys(allAttrs).forEach((key) => {
-    for (key in allAttrs.keys()) {
-      const prevAttr = prevVd.attrs[key]
-      const nextAttr = nextVd.attrs[key]
-      
-      // delete
-      if (nextAttr === undefined) {
-        patches.push({
-          type: attrPatchTypes.REMOVE,
-        })
-      }
-  
-      // update
-      else if (prevAttr == undefined || prevAttr !== nextAttr) {
-        patches.push({
-          type: attrPatchTypes.UPDATE,
-          key,
-          value: nextAttr,
-        })
-      }
+    const prevAttr = prevVdAttrs[key]
+    const nextAttr = nextVdAttrs[key]
+    
+    // delete
+    if (nextAttr === undefined) {
+      patches.push({
+        type: attrPatchTypes.REMOVE,
+        key,
+      })
+    }
+
+    // update
+    else if (prevAttr == undefined || prevAttr !== nextAttr) {
+      patches.push({
+        type: attrPatchTypes.UPDATE,
+        key,
+        value: nextAttr,
+      })
     }
   })
   

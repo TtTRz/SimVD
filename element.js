@@ -43,8 +43,8 @@ export const createElement = (vd) => {
 
 // attrs
 const setAttrs = (element, attrs) => {
-  for (let key in attrs) {
-    element.setAttributes(key, attrs[key])
+  for (let attr of attrs) {
+    element.setAttribute(attr.name, attr.value)
   }
 }
 

@@ -45,7 +45,6 @@ const renderHtml_cmj = (html, options = {bind: "#root"}) => {
   const _html = filterHtml(html)
   const vdObj = html2VD.html_2_vd(_html)
   rootElement = document.querySelector(options.bind)
-  console.log(rootElement)
   render(vdObj)
 }
 

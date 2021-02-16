@@ -1,7 +1,7 @@
 import { expect }from 'chai'
 const html2VD = require('../pkg_node/html2VD.js');
 const {html_2_vd} = html2VD
-import vd from '../index.js';
+import vd from '../scripts/index.js';
 import {filterHtml} from '../utils/html_filter';
 import { env }from './env';
 

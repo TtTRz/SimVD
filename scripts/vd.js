@@ -1,5 +1,4 @@
-import init, { html_2_vd } from './pkg/html2VD.js'
-const html2VD = require('./pkg_node/html2VD.js')
+import init, { html_2_vd } from '../pkg/html2VD.js'
 import { createElement } from './element.js'
 import { attrPatchTypes, nodePatchTypes } from './type.js';
 import {diffVd } from './diff.js';
@@ -40,6 +39,7 @@ const renderHtml = async (html, options = {bind: "#root"}) => {
 }
 
 const renderHtml_cmj = (html, options = {bind: "#root"}) => {
+  const html2VD = require('./pkg_node/html2VD.js')
   prevVdObj = undefined;
   rootElement = undefined;
   const _html = filterHtml(html)

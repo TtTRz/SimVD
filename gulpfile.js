@@ -1,5 +1,6 @@
 const { series, parallel } = require('gulp');
-
+const rollup = require('rollup');
+const rollupTypescript = require('rollup-plugin-typescript');
 function clean(cb) {
   cb();
 }
@@ -12,8 +13,12 @@ function  cleanEsm() {
 
 }
 
-function build(cb) {
-  cb();
+async function build() {
+  
+}
+
+function buidlBundleWasm() {
+  
 }
 
 exports.build = build;

@@ -70,10 +70,5 @@ async function buildCjs() {
 }
 
 
-exports.build = build;
-exports.clean = clean;
-exports.cleanCjs = cleanCjs;
-exports.cleanEsm = cleanEsm;
-exports.buildEsm = buildEsm;
-exports.buildCjs = buildCjs;
+
 exports.default = series(clean, build);

@@ -13,16 +13,13 @@ export default {
   input: 'scripts/index.js',
   output: [{
     file: './cjs/bundle.js',
-    format: 'cjs'
+    format: 'cjs',
+    exports: "default"
   }, {
     file: './esm/bundle.js',
     format: 'es'
   }],
   plugins: [
-    // wasm(),
     resolve(),
-    // babel({
-    //   exclude: 'node_modules/**'
-    // })
   ]
 };

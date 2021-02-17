@@ -10,18 +10,12 @@
 </body>
 
 <script type="module">
-  import init, { html_2_vd } from '../pkg/html2VD.js'
   import vd from '../esm/bundle.js';
-
-  const filterHtml = (html) => {
-    return html.trim().replace(/[\n]+[\s]*/g, "")
-  }
 
   const bindButton = () => {
     let btn = document.createElement('button');
     btn.onclick = () => {
-      let vdObj_new = html_2_vd(filterHtml(html_new));
-      vd.render(vdObj_new)
+      vd.render(html_new)
     }
     btn.innerText = "change title"
     document.body.appendChild(btn)
@@ -36,7 +30,6 @@
   `
 
   const run = async () => {
-    await init();
     vd.renderHtml(html, {
       bind: "#root"
     })

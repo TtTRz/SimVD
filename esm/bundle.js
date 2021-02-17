@@ -345,15 +345,14 @@ const diffChildren = (prevVd, nextVd) => {
   
 };
 
-const filterHtml = (html) => {
-  return html.trim().replace(/[\n]+[\s]*/g, "")
-};
-
 let prevVdObj = undefined;
 let rootElement = undefined;
 let isWasmInitial = false;
 
 const render = (vdObj) => {
+  if (typeof vdObj === "string") {
+    vdObj = html_2_vd(vdObj);
+  } 
   if (prevVdObj) {
     const patches = diffVd(prevVdObj, vdObj);
     prevVdObj = vdObj;
@@ -373,8 +372,7 @@ const renderHtml = async (html, options = {bind: "#root"}) => {
     isWasmInitial = true;
   }
 
-  const _html = filterHtml(html);
-  const vdObj = html_2_vd(_html);
+  const vdObj = html_2_vd(html);
 
   rootElement = document.querySelector(options.bind);
   render(vdObj);
@@ -384,8 +382,7 @@ const renderHtml_cmj = (html, options = {bind: "#root"}) => {
   const html2VD = require('../pkg_node/html2VD.js');
   prevVdObj = undefined;
   rootElement = undefined;
-  const _html = filterHtml(html);
-  const vdObj = html2VD.html_2_vd(_html);
+  const vdObj = html2VD.html_2_vd(html);
   rootElement = document.querySelector(options.bind);
   render(vdObj);
 };

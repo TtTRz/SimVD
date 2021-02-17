@@ -1,31 +1,37 @@
 const { series, parallel } = require('gulp');
 const rollup = require('rollup');
-// const rollupTypescript = require('rollup-plugin-typescript');
 const del = require('del');
 const gulp = require('gulp')
 const rename = require('gulp-rename')
 const resolve = require('rollup-plugin-node-resolve')
 
+const BUNDLE_NAME = "bundle";
 
-function clean(cb) {
-    cleanCjs()
-    cleanEsm()
-  cb();
+
+async function clean(cb) {
+    await Promise.all([cleanCjs(), cleanEsm()])
+    cb()
 }
 
-function cleanCjs(cb) {
-  del([
+function cleanCjs() {
+  return del([
     'cjs/**/*',
-  ], cb);
+  ]);
 }
 
-function  cleanEsm(cb) {
-  del([
+function cleanEsm() {
+  return del([
     'esm/**/*',
-  ], cb);
+  ]);
 }
 
-async function build() {
+async function build(cb) {
+  await buildEsm();
+  await buildCjs();
+  cb()
+}
+
+async function buildEsm() {
   const bundle = await rollup.rollup({
     input: 'scripts/index.js',
     plugins: [
@@ -33,32 +39,41 @@ async function build() {
     ]
   });
   await bundle.write({
-    file: './esm/bundle.js',
+    file: `./esm/${BUNDLE_NAME}.js`,
     format: 'es',
     name: 'ES',
     sourcemap: true
   })
+  await gulp.src('pkg/html2VD_bg.wasm')
+    .pipe(rename({basename: `${BUNDLE_NAME}_bg`}))
+    .pipe(gulp.dest('esm'))
+}
+
+async function buildCjs() {
+  const bundle = await rollup.rollup({
+    input: 'scripts/index.js',
+    plugins: [
+      resolve()
+    ]
+  });
   await bundle.write({
-    file: './cjs/bundle.js',
+    file: `./cjs/${BUNDLE_NAME}.js`,
     format: 'cjs',
     name: 'CJS',
-    sourcemap: true
+    sourcemap: true,
+    exports: "default"
   });
 
-  buildBundleWasm()
-}
-
-function buildBundleWasm() {
-  gulp.src('pkg/html2VD_bg.wasm')
-    .pipe(rename({basename: "bundle_bg"}))
-    .pipe(gulp.dest('esm'))
-  gulp.src('pkg_node/html2VD_bg.wasm')
-    .pipe(rename({basename: "bundle_bg"}))
+  await gulp.src('pkg_node/html2VD_bg.wasm')
+    .pipe(rename({basename: `${BUNDLE_NAME}_bg`}))
     .pipe(gulp.dest('cjs'))
 }
+
 
 exports.build = build;
 exports.clean = clean;
 exports.cleanCjs = cleanCjs;
 exports.cleanEsm = cleanEsm;
-exports.default = series(clean, build, );
+exports.buildEsm = buildEsm;
+exports.buildCjs = buildCjs;
+exports.default = series(clean, build);

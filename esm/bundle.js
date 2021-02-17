@@ -381,7 +381,7 @@ const renderHtml = async (html, options = {bind: "#root"}) => {
 };
 
 const renderHtml_cmj = (html, options = {bind: "#root"}) => {
-  const html2VD = require('./pkg_node/html2VD.js');
+  const html2VD = require('../pkg_node/html2VD.js');
   prevVdObj = undefined;
   rootElement = undefined;
   const _html = filterHtml(html);
@@ -465,3 +465,4 @@ var index = {
 };
 
 export default index;
+//# sourceMappingURL=bundle.js.map

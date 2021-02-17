@@ -8,12 +8,15 @@
 <body>
   <div id="root"></div>
 </body>
+
 <script type="module">
   import init, { html_2_vd } from '../pkg/html2VD.js'
   import vd from '../esm/bundle.js';
+
   const filterHtml = (html) => {
     return html.trim().replace(/[\n]+[\s]*/g, "")
   }
+
   const bindButton = () => {
     let btn = document.createElement('button');
     btn.onclick = () => {
@@ -25,11 +28,11 @@
   }
 
   const html = `
-  <div>hello</div>
-    `
+    <div>hello</div>
+  `
 
   const html_new = `
-  <div class="hello">hello title</div>
+    <div class="hello">hello title</div>
   `
 
   const run = async () => {
@@ -38,6 +41,7 @@
       bind: "#root"
     })
   }
+
   run()
   bindButton()
 </script>

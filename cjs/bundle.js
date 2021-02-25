@@ -40,6 +40,7 @@ const createElement = (vd) => {
     return FragmentElement;
   }
 
+
   // ElementNode
   const {tag, children, attrs} = vd;
 
@@ -269,7 +270,7 @@ const diffVd = (prevVd, nextVd) => {
   if (
     prevVd.node_type !== nextVd.node_type 
     || prevVd.inner_html !== nextVd.inner_html
-    || prevVd.tag !== nextVd.tag
+    || prevVd.tag !== nextVd.tag || prevVd.node_type === NodeType.TextNode
   ) {
     return {
       type: nodePatchTypes.REPLACE,

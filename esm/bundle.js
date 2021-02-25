@@ -23,10 +23,12 @@ const createElement = (vd) => {
   if (vd.node_type === NodeType.TextNode) {
     return document.createTextNode(vd.inner_html)
   }
+  
 
   // FragmentNode
   if (vd.node_type === NodeType.FragmentNode) {
     const FragmentElement = document.createDocumentFragment();
+
 
     const { children } = vd;
 
@@ -37,6 +39,7 @@ const createElement = (vd) => {
 
     return FragmentElement;
   }
+
 
   // ElementNode
   const {tag, children, attrs} = vd;
@@ -236,7 +239,6 @@ async function init(input) {
 }
 
 const diffVd = (prevVd, nextVd) => {
-
   // fragmentNode
   // TODO
   // if (prevVd.node_type === NodeType.FragmentNode && nextVd.node_type === NodeType.FragmentNode) {
@@ -246,7 +248,7 @@ const diffVd = (prevVd, nextVd) => {
   //     children: diffChildren(prevVd, nextVd)
   //   }
   // }
-  
+
   // create
   if (prevVd === undefined) {
     return {
@@ -262,18 +264,21 @@ const diffVd = (prevVd, nextVd) => {
     }
   }
 
+
   // replace
   // rules TextNode, Tag not equal, NodeType not equal, 
   if (
     prevVd.node_type !== nextVd.node_type 
+    || prevVd.tag !== nextVd.tag 
+    || prevVd.node_type === NodeType.TextNode
     || prevVd.inner_html !== nextVd.inner_html
-    || prevVd.tag !== nextVd.tag
   ) {
     return {
       type: nodePatchTypes.REPLACE,
       vd: nextVd,
     }
   }
+
   
   // update
   // diff attrs
@@ -281,7 +286,6 @@ const diffVd = (prevVd, nextVd) => {
 
   // diff children
   const childrenDiff = diffChildren(prevVd, nextVd);
-
   if (attrsDiff.length > 0 || childrenDiff.some(p => (p !== undefined))) {
     return {
       type: nodePatchTypes.UPDATE,
@@ -289,7 +293,6 @@ const diffVd = (prevVd, nextVd) => {
       children: childrenDiff,
     }
   }
-
 };
 
 

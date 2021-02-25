@@ -6,6 +6,7 @@ const rename = require('gulp-rename')
 const resolve = require('rollup-plugin-node-resolve')
 
 const BUNDLE_NAME = "bundle";
+const watch = require('gulp-watch');
 
 
 async function clean(cb) {
@@ -69,6 +70,10 @@ async function buildCjs() {
     .pipe(gulp.dest('cjs'))
 }
 
-
+async function watch_mode() {
+  gulp.series(cleanEsm, buildEsm)
+  gulp.watch("scripts/**/*", gulp.series(cleanEsm, buildEsm))
+}
+exports.watch = watch_mode;
 
 exports.default = series(clean, build);

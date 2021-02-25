@@ -7,10 +7,12 @@ export const createElement = (vd) => {
   if (vd.node_type === NodeType.TextNode) {
     return document.createTextNode(vd.inner_html)
   }
+  
 
   // FragmentNode
   if (vd.node_type === NodeType.FragmentNode) {
     const FragmentElement = document.createDocumentFragment()
+
 
     const { children } = vd;
 
@@ -21,6 +23,7 @@ export const createElement = (vd) => {
 
     return FragmentElement;
   }
+
 
   // ElementNode
   const {tag, children, attrs} = vd

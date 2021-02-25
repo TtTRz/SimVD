@@ -3,7 +3,6 @@ import { NodeType, attrPatchTypes, nodePatchTypes } from './type.js';
 
 
 export const diffVd = (prevVd, nextVd) => {
-
   // fragmentNode
   // TODO
   // if (prevVd.node_type === NodeType.FragmentNode && nextVd.node_type === NodeType.FragmentNode) {
@@ -13,7 +12,7 @@ export const diffVd = (prevVd, nextVd) => {
   //     children: diffChildren(prevVd, nextVd)
   //   }
   // }
-  
+
   // create
   if (prevVd === undefined) {
     return {
@@ -29,18 +28,21 @@ export const diffVd = (prevVd, nextVd) => {
     }
   }
 
+
   // replace
   // rules TextNode, Tag not equal, NodeType not equal, 
   if (
     prevVd.node_type !== nextVd.node_type 
+    || prevVd.tag !== nextVd.tag 
+    || prevVd.node_type === NodeType.TextNode
     || prevVd.inner_html !== nextVd.inner_html
-    || prevVd.tag !== nextVd.tag
   ) {
     return {
       type: nodePatchTypes.REPLACE,
       vd: nextVd,
     }
   }
+
   
   // update
   // diff attrs
@@ -48,7 +50,6 @@ export const diffVd = (prevVd, nextVd) => {
 
   // diff children
   const childrenDiff = diffChildren(prevVd, nextVd);
-
   if (attrsDiff.length > 0 || childrenDiff.some(p => (p !== undefined))) {
     return {
       type: nodePatchTypes.UPDATE,
@@ -56,7 +57,6 @@ export const diffVd = (prevVd, nextVd) => {
       children: childrenDiff,
     }
   }
-
 }
 
 
@@ -111,3 +111,5 @@ export const diffChildren = (prevVd, nextVd) => {
   return patches
   
 }
+
+
